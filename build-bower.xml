@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="laravel-javascript-dependcy-manager" default="install">
+  <resolvepath propertyName="public.vendor" file="${source}/public/vendor" />
+  <resolvepath propertyName="bower.vendor" file="${source}/vendor/bower" />
+
+  <target name="install" description="Install bower components">
+    <if>
+      <available file="${source}/bower.json" />
+      <else>
+        <fail message="No bower.json file found" />
+      </else>
+    </if>
+    <if>
+      <available file="${source}/vendor/bower" type="dir" />
+      <then>
+        <echo msg="Updating bower dependencies" />
+        <exec command="bower update --allow-root" escape="false" level="debug"  checkreturn="true" />
+      </then>
+      <else>
+        <echo msg="Installing bower dependencies and configuring  symlinks." />
+        <exec command="bower install --allow-root" escape="false" level="debug" checkreturn="true" />
+        <phingCall target="symlinks" />
+      </else>
+    </if>
+  </target>
+
+  <target name="symlinks" description="Create symlinks to the required components">
+    <mkdir dir="${public.vendor}/jquery" />
+    <symlink link="${public.vendor}/jquery" overwrite="true">
+      <fileset dir="${bower.vendor}/jquery">
+        <include name="jquery.min.js" />
+      </fileset>
+    </symlink>
+
+    <mkdir dir="${public.vendor}/bootstrap" />
+    <symlink link="${public.vendor}/bootstrap" overwrite="true">
+      <fileset dir="${bower.vendor}/bootstrap/dist/css">
+        <include name="*.min.css" />
+      </fileset>
+      <fileset dir="${bower.vendor}/bootstrap/dist/js">
+        <include name="*.min.js" />
+      </fileset>
+    </symlink>
+
+    <mkdir dir="${public.vendor}/bootstrap/icons" />
+    <symlink link="${public.vendor}/bootstrap/icons" overwrite="true">
+      <fileset dir="${bower.vendor}/bootstrap-glyphicons/css/">
+        <include name="bootstrap-glyphicons.css" />
+      </fileset>
+    </symlink>
+
+    <mkdir dir="${public.vendor}/bootstrap/fonts" />
+    <symlink link="${public.vendor}/bootstrap/fonts" overwrite="true">
+      <fileset dir="${bower.vendor}/bootstrap-glyphicons/fonts">
+      </fileset>
+    </symlink>
+
+
+    <mkdir dir="${public.vendor}/knockout" />
+    <symlink link="${public.vendor}/knockout" overwrite="true">
+      <fileset dir="${bower.vendor}/knockout.js">
+        <include name="knockout.js" />
+      </fileset>
+    </symlink>
+  </target>
+
+  <target name="clean" description="Remove all javascript dependencies">
+    <delete dir="${public.vendor}" verbose="false" quiet="true" />
+    <delete dir="${bower.vendor}" verbose="false" quiet="true" />
+  </target>
+</project>

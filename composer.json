@@ -1,0 +1,15 @@
+{
+    "require": {
+        "php": ">=5.4.0",
+        "laravel/framework": ">=4.0.0"
+    },
+    "autoload": {
+        "classmap": [
+            "app/migrations"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">3.7.0"
+    }
+}
+

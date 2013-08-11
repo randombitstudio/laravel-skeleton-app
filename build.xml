@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="sim-app" default="install">
+ <resolvepath propertyName="source" file="." />
+
+  <!-- ================================================  -->
+  <!-- Default project target, installs javascript       -->
+  <!-- and php dependencies and runs artisan migrations  -->
+  <!-- ================================================  -->
+  <target name="install" description="Configure full project - dependencies &amp; migrations.">
+    <phing phingfile="build-composer.xml" inheritRefs="true" target="install" />
+    <phing phingfile="build-bower.xml" inheritRefs="true" target="install" />    
+  </target>
+
+  <!-- ================================================  -->
+  <!-- Javascript dependency management with bower.      -->
+  <!-- Accepts -Dsub={target} parameter, see             -->
+  <!-- build-bower.xml for list of possible values.      -->
+  <!-- ================================================  -->  
+  <target name="bower" description="Install bower dependencies only">
+    <property name="sub" value="install" />
+    <phing phingfile="build-bower.xml" inheritRefs="true" target="${sub}" />
+  </target>
+
+
+  <!-- ================================================  -->
+  <!-- PHP dependency management with composer.          -->
+  <!-- Accepts -Dsub={target} parameter, see             -->
+  <!-- build-composer.xml for list of possible values.   -->
+  <!-- ================================================  -->  
+  <target name="composer" description="Install composer dependencies only">
+    <property name="sub" value="install" />
+    <phing phingfile="build-composer.xml" inheritRefs="true" target="${sub}" />
+  </target>
+
+  <!-- ================================================  -->
+  <!-- Cleans up all dependencies.                       -->
+  <!-- ================================================  -->  
+  <target name="clean" description="Cleans up all dependencies(vendor directory)">
+    <if>
+      <not>
+        <isset property="proceed" />
+      </not>
+      <then>
+        <propertyprompt propertyName="proceed" defaultValue="N"
+                        promptText="This action removes the ${source}/vendor directory, do you wish to proceed?[Y/N]" />
+      </then>
+    </if>
+    <if>
+      <equals arg1="${proceed}" arg2="Y" />
+      <then>
+        <echo msg="Running dependency clean up." />
+        <delete dir="${source}/vendor" verbose="false" quiet="true" />
+        <delete dir="${source}/public/vendor" verbose="false" quiet="true" />
+        <delete file="${source}/composer.lock" verbose="false" quiet="true" />
+      </then>
+      <else>
+        <echo msg="Cleaning up the dependencies was aborted." />
+      </else>
+    </if>
+  </target>
+
+  <!-- ================================================  -->
+  <!-- Valdates php & javascript code with phpcs &       -->
+  <!-- jshint.                                           -->
+  <!-- ================================================  -->  
+  <target name="validate" description="Validate quality of PHP(phpcs) and Javascript(jshint) code.">
+    <phing phingfile="build-validate.xml" inheritRefs="true" target="validate" />
+  </target>
+</project>

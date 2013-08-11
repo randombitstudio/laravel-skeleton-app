@@ -1,0 +1,11 @@
+{
+    "name": "Budget Simulation Application",
+    "version": "0.1.0",
+    "dependencies": {
+        "jquery": ">=1.9",
+        "bootstrap": ">=3.0",
+        "knockout.js": ">=2.3",
+        "bootstrap-glyphicons": "gh-pages"
+    }
+}
+

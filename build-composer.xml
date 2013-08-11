@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="composer-for-memorix-archives" default="install">
+  <target name="install" description="Updates / install composer requirements">
+    <if>
+      <not>
+        <available file="${source}/vendor" type="dir" />
+      </not>
+      <then>
+        <mkdir dir="${source}/vendor" />
+      </then>
+    </if>
+    <if>
+      <available file="composer.json" />
+      <else>
+        <fail message="No composer.json file found" />
+      </else>
+    </if>
+
+    <if>
+      <available file="composer.phar"/>
+      <else>
+        <echo msg="Retrieving composer" />
+        <exec command="curl -s http://getcomposer.org/installer | php"
+              escape="false" level="debug" />
+      </else>
+    </if>
+
+    <if>
+      <available file="composer.lock" />
+
+      <then>
+        <echo msg="Updating dependencies" />
+        <exec command="php composer.phar update" escape="false" level="debug" checkreturn="true"/>
+      </then>
+
+      <else>
+        <echo msg="Installing dependencies" />
+        <exec command="php composer.phar install" escape="false" level="debug" checkreturn="true"/>
+      </else>
+    </if>
+
+    <echo msg="Cleaning up composer.phar."/>
+
+    <delete>
+      <fileset dir=".">
+        <include name="composer.phar"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="clean" description="Clean up composer dependencies.">
+    <delete verbose="false" quiet="true" includeemptydirs="true">
+      <fileset dir="${source}/vendor">
+        <exclude name="**/bower/**" />
+      </fileset>
+    </delete>
+  </target>
+</project>
