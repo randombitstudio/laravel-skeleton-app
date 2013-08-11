@@ -5,4 +5,5 @@
 /data/cache/*
 /data/sessions/*
 /data/views/*
+!/data/*/.gitkeep*
 composer.lock
