@@ -9,6 +9,11 @@
   <target name="install" description="Configure full project - dependencies &amp; migrations.">
     <phing phingfile="build-composer.xml" inheritRefs="true" target="install" />
     <phing phingfile="build-bower.xml" inheritRefs="true" target="install" />    
+    <chmod  mode="0775">
+      <fileset dir="${source}/data">
+        <include name="**/**" />
+      </fileset>
+    </chmod>
   </target>
 
   <!-- ================================================  -->
